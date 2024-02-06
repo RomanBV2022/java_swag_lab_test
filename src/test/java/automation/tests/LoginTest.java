@@ -11,15 +11,19 @@ public class LoginTest extends BaseTest {
     private static final String HOME_PAGE = "DEMOQA";
 
     @Test
-    public void testLogin() {
+    public void testTitleHomePage() {
         String homePage = new HomePage(getDriver())
                 .getTitleOfPage();
 
         Assert.assertEquals(homePage, HOME_PAGE);
-
-
-
-
     }
+
+    @Test
+    public void testBannerPage() {
+        Boolean bannerVisibleTrue = new  HomePage(getDriver())
+                .bannerIsVisible();
+        Assert.assertTrue(bannerVisibleTrue);
+    }
+
 
 }
