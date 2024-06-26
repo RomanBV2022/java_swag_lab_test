@@ -8,21 +8,15 @@ import org.testng.annotations.Test;
 
 public class LoginTest extends BaseTest {
 
-    private static final String HOME_PAGE = "DEMOQA";
-
     @Test
-    public void testTitleHomePage() {
-        String homePage = new HomePage(getDriver())
-                .getTitleOfPage();
+    public void loginTest() {
 
-        Assert.assertEquals(homePage, HOME_PAGE);
-    }
+        int items = new HomePage(getDriver())
+                .login()
+                .howMuchElements();
 
-    @Test
-    public void testBannerPage() {
-        Boolean bannerVisibleTrue = new  HomePage(getDriver())
-                .bannerIsVisible();
-        Assert.assertTrue(bannerVisibleTrue);
+        Assert.assertEquals(items,6);
+
     }
 
 

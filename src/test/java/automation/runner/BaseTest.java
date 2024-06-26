@@ -35,7 +35,7 @@ public abstract class BaseTest {
     }
 
     private void getWeb() {
-        ProjectUtils.log("Get web page: https://demo.guru99.com/");
+        ProjectUtils.log("Get web page: https://www.saucedemo.com/");
         ProjectUtils.get(driver);
     }
 
