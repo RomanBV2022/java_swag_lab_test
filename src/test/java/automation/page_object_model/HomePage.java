@@ -40,16 +40,7 @@ public class HomePage extends BasePage {
         return new ProductsPage(getDriver());
     }
 
-    public Boolean getUrl(String url) {
 
-
-         if(url ==  getDriver().getCurrentUrl()) {
-             return true;
-         }
-         else return false;
-
-
-    }
 
     public String logOutCheckStatus() {
        return getDriver().getCurrentUrl();

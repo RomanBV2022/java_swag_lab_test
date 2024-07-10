@@ -4,10 +4,13 @@ package automation.base;
 
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+
 
 abstract class BaseModel {
 
@@ -48,5 +51,11 @@ abstract class BaseModel {
         }
 
         return wait10;
+    }
+
+    public WebElement waitElementVisible(WebElement element, int duration) {
+        new WebDriverWait(getDriver(), Duration.ofSeconds(duration)).until(ExpectedConditions.visibilityOf(element));
+
+        return  element;
     }
 }
