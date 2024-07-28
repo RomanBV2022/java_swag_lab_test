@@ -1,50 +1,74 @@
 package automation.tests;
 
 
-import automation.page_object_model.HomePage;
-import automation.page_object_model.ProductsPage;
+import automation.page_object_model.LoginPage;
 import automation.runner.BaseTest;
 import io.qameta.allure.*;
-import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.Ignore;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.List;
 
 import static io.qameta.allure.SeverityLevel.CRITICAL;
 
 @Epic("Login")
 public class LoginTest extends BaseTest {
-    private static final String URL = "https://www.saucedemo.com/inventory.html";
-    WebElement dropDownMenu_1;
-
-    @Test
-    @Story("")
-    @Description("")
-    @Severity(CRITICAL)
-    public void loginTest() {
-        String items = new HomePage(getDriver())
-                .login()
-                .clickmenu()
-                .loginConfirm();
-        Allure.step("Expected result: ");
-        Assert.assertEquals(items, "Logout");
+    @DataProvider
+    Object[][] loginData() {
+        return new Object[][]{
+                {"standard_user", "secret_sauce"},
+                {"problem_user", "secret_sauce"},
+                {"performance_glitch_user", "secret_sauce"},
+                {"error_user", "secret_sauce"},
+                {"visual_user", "secret_sauce"}
+        };
     }
 
     @Test
-    @Story("")
-    @Description("")
+    @Story("login")
+    @Description("Testing login to website")
+    @Severity(CRITICAL)
+    public void loginTest() {
+        String items = new LoginPage(getDriver())
+                .login()
+                .clickMenu()
+                .loginConfirm();
+        Allure.step("Expected result: User is login");
+        Assert.assertEquals(items, "Logout");
+
+    }
+
+    @Test(dataProvider = "loginData")
+    @Story("login")
+    @Description("Testing login to website")
+    @Severity(CRITICAL)
+    public void testLoginDataProvider(String name, String password) {
+        String items = new LoginPage(getDriver())
+                .loginWithDataParameters(name, password)
+                .clickMenu()
+                .loginConfirm();
+        Allure.step("Expected result: User is login");
+        Assert.assertEquals(items, "Logout");
+    }
+
+
+    @Test
+    @Story("logout")
+    @Description("Testing logout from website")
     @Severity(CRITICAL)
     public void logOutTest() {
-        Boolean logOut = new HomePage(getDriver())
+        String logOut= new LoginPage(getDriver())
                 .login()
-                .clickmenu()
+                .clickMenu()
                 .logOut()
-                .logOutCheckBoolean("https://www.saucedemo.com/");
+                .logOutString();
 
-        Allure.step("Expected result: ");
-        Assert.assertTrue(logOut, "Your are not logout!!");
+        Allure.step("Expected result: User is logout ");
+        Assert.assertEquals(logOut, "Login", "Error message : Your are not logout");
+    }
+    @Test
+    public  void logOutSampleTest() {
+
     }
 
 

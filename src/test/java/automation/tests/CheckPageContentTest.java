@@ -1,7 +1,6 @@
 package automation.tests;
 
-import automation.base.BasePage;
-import automation.page_object_model.HomePage;
+import automation.page_object_model.LoginPage;
 import automation.runner.BaseTest;
 import io.qameta.allure.*;
 import org.testng.Assert;
@@ -11,7 +10,7 @@ public class CheckPageContentTest extends BaseTest {
     private static final String TITLE_OF_PAGE = "Swag Labs";
     @Test
     public void loginCheckItemsTest() {
-        int items = new HomePage(getDriver())
+        int items = new LoginPage(getDriver())
                 .login()
                 .howMuchElements();
 
@@ -20,7 +19,7 @@ public class CheckPageContentTest extends BaseTest {
 
     @Test
     public void checkTitleTest() {
-        String title = new HomePage(getDriver())
+        String title = new LoginPage(getDriver())
                 .login()
                 .getTitle();
 
@@ -33,9 +32,9 @@ public class CheckPageContentTest extends BaseTest {
     @Owner("Roman Burlaka")
     @Link(name= "WebSite", url = "https://www.saucedemo.com/")
     public void checkHeaderMenuTest() {
-        int itemMenuList = new HomePage(getDriver())
+        int itemMenuList = new LoginPage(getDriver())
                 .login()
-                .clickmenu()
+                .clickMenu()
                 .getMenuItem();
 
         Allure.step(("Expected result: 4"));
