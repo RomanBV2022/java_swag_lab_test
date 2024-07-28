@@ -3,17 +3,18 @@ package automation.page_object_model;
 
 import automation.base.BasePage;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.testng.annotations.DataProvider;
 
 
-public class HomePage extends BasePage {
-
+public class LoginPage extends BasePage {
 
     public static final String USER_NAME = "standard_user";
     public static final String PASSWORD = "secret_sauce";
-    private static final String URL = "https://www.saucedemo.com/";
 
     @FindBy()
     WebElement userName = getDriver().findElement(By.id("user-name"));
@@ -24,10 +25,7 @@ public class HomePage extends BasePage {
     @FindBy
     WebElement loginButton = getDriver().findElement(By.id("login-button"));
 
-
-
-
-    public HomePage(WebDriver driver) {
+    public LoginPage(WebDriver driver) {
         super(driver);
 
     }
@@ -40,24 +38,19 @@ public class HomePage extends BasePage {
         return new ProductsPage(getDriver());
     }
 
+    public ProductsPage loginWithDataParameters(String name, String pass) {
+        userName.sendKeys(name);
+        password.sendKeys(pass);
+        loginButton.click();
 
+        return new ProductsPage(getDriver());
 
-    public String logOutCheckStatus() {
-       return getDriver().getCurrentUrl();
     }
 
-    public Boolean logOutCheckBoolean(String webSite) {
-        if (URL == webSite ) {
-            return  true;
-        }
-        else {
-            return false;
-        }
+    public String logOutString() {
+        getWait5().until(ExpectedConditions.visibilityOf(loginButton));
 
-        }
+        return  loginButton.getAttribute("value");
     }
 
-
-
-
-
+}

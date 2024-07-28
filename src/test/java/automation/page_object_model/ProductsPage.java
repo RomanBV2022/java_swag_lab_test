@@ -7,13 +7,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class ProductsPage extends BasePage {
-    private static final String URL = "https://www.saucedemo.com/";
+    private static final String URL;
+
+    static {
+        URL ="https://www.saucedemo.com/";
+    }
 
     private static final String BACK_PACK_PRODUCT = "sauce-labs-fleece-jacket";
     @FindBy
@@ -25,58 +28,41 @@ public class ProductsPage extends BasePage {
     @FindBy
     WebElement dropDownMenu = getDriver().findElement(By.xpath("//select[@class = 'product_sort_container']"));
 
-    @FindBy
-    WebElement dropDownMenu_1 = getDriver().findElement(By.xpath("//select[@class = 'product_sort_container']/option[1]"));
-
-    @FindBy
-    WebElement dropDownMenu_2 = getDriver().findElement(By.xpath("//select[@class = 'product_sort_container']/option[2]"));
-
-    @FindBy
-    WebElement dropDownMenu_3 = getDriver().findElement(By.xpath("//select[@class = 'product_sort_container']/option[3]"));
-
-    @FindBy
-    WebElement dropDownMenu_4 = getDriver().findElement(By.xpath("//select[@class = 'product_sort_container']/option[4]"));
-
-    @FindBy
-    List<WebElement> priceList = getDriver().findElements(By.xpath("//div[@class= 'inventory_item_price']"));
 
     @FindBy
     WebElement productFirstItem = getDriver().findElement(By.xpath("//div[@class = 'inventory_list']/div[@class='inventory_item'][1]/div[@class = 'inventory_item_description']//div[@class ='inventory_item_name ']"));
 
 
-    public ProductsPage(WebDriver driver) {
-        super(driver);
-    }
 
     @FindBy
     List<WebElement> allProducts = getDriver().findElements(By.xpath("//div[@class = 'inventory_item']"));
 
     @FindBy
-    List<WebElement> getPriceList = getDriver().findElements(By.xpath("//div[@class = 'inventory_item']//div[@class = 'pricebar']"));
+    List<WebElement> getPriceList = getDriver().findElements(By.xpath("//div[@class = 'inventory_item_price']"));
 
 
     @FindBy
     List<WebElement> menuItems = getDriver().findElements(By.xpath("//nav[@class= 'bm-item-list']/a"));
 
-    @FindBy
-    WebElement logOutButton = getDriver().findElement(By.xpath("//a[@id = 'logout_sidebar_link']"));
+    @FindBy(xpath = "//a[@id = 'logout_sidebar_link']")
+    WebElement logOutButton;
     @FindBy
     WebElement addToCart = getDriver().findElement(By.id("add-to-cart-sauce-labs-fleece-jacket"));
 
-    //    @FindBy
-//    WebElement shoppingCartBadge = getDriver().findElement(By.xpath("//span[@class = 'shopping_cart_badge']"));
+    @FindBy(xpath = "//span[@class = 'active_option']")
+    WebElement dropdownSortedName;
+
+    @FindBy(xpath = "//a[@id= 'about_sidebar_link']")
+    WebElement getAboutLink;
+
+    public ProductsPage(WebDriver driver) {
+        super(driver);
+    }
+
     @Step("Shows all products on page")
     public int howMuchElements() {
 
         return allProducts.size();
-    }
-
-    public String getUrl(String url) {
-        waitElementVisible(title, 3);
-
-        if (url == getDriver().getPageSource()) {
-            return getDriver().getPageSource();
-        } else return null;
     }
 
     public String getTitle() {
@@ -85,7 +71,7 @@ public class ProductsPage extends BasePage {
         return title.getText();
     }
 
-    public ProductsPage clickmenu() {
+    public ProductsPage clickMenu() {
         menu.click();
 
         return this;
@@ -96,35 +82,31 @@ public class ProductsPage extends BasePage {
         return menuItems.size();
     }
 
-    public HomePage logOut() {
+    public LoginPage logOut() {
+        getWait5().until(ExpectedConditions.visibilityOf(logOutButton)).click();
 
-        logOutButton.click();
-
-        return new HomePage(getDriver());
+        return new LoginPage(getDriver());
     }
 
-
-    public ProductsPage dropDownMenuClick() {
-        dropDownMenu_4.click();
+    public ProductsPage dropDownSelect(String value) {
+        Select select = new Select(dropDownMenu);
+        select.selectByValue(value);
 
         return this;
     }
 
-    public Boolean selectItemTrue() {
-        getWait5().until(ExpectedConditions.visibilityOf(productFirstItem));
-        if (productFirstItem.getText() == "Sauce Labs Fleece Jacket") {
-            return true;
-        } else {
-            return false;
-        }
+    public String dropdownSelectGetValue(String value) {
+        Select select = new Select(dropDownMenu);
+        select.selectByValue(value);
 
+
+        return dropdownSortedName.getText();
     }
+    public ProductsPage dropdownSelectList(String value) {
+        Select select = new Select(dropDownMenu);
+        select.selectByValue(value);
 
-    public String selectItem() {
-        getWait5().until(ExpectedConditions.visibilityOf(productFirstItem));
-
-        return productFirstItem.getText();
-
+        return this;
     }
 
     public ProductsPage addProduct() {
@@ -140,8 +122,6 @@ public class ProductsPage extends BasePage {
                 .map(WebElement::getText)
                 .map(permalink -> permalink.split(",")[0].trim())
                 .toList();
-
-
     }
 
     public String loginConfirm() {
@@ -150,37 +130,12 @@ public class ProductsPage extends BasePage {
         return logOutButton.getText();
     }
 
-    public static List itemListHashSet() {
-       HashSet<Integer> hashSetList = new HashSet<>();
-        hashSetList.add(23);
-        hashSetList.add(23);
-        hashSetList.add(23);
-        hashSetList.add(23);
+    public AboutPage goToAboutPage() {
+        getAboutLink.click();
 
-        return  hashSetList.stream().toList();
+        return new AboutPage(getDriver());
     }
 
-    public static void main(String[] args) {
-        System.out.println(itemListHashSet());
-
-    }
-
-//    public String checkCart() {
-//        waitElementVisible(shoppingCartBadge, 3);
-//
-//        return shoppingCartBadge.getText();
-//
-//
-//    }
-
-//    public <T> T selectProjectAndClickOk(T page, String nameOfProject) {
-//        getDriver()
-//                .findElements(By.xpath("//li[contains(text(),'" + nameOfProject+ "')]"));
-//
-//        okButton.click();
-//
-//        return page;
-//    }
 
 
 }
