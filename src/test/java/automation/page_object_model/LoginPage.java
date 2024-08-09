@@ -2,6 +2,7 @@ package automation.page_object_model;
 
 
 import automation.base.BasePage;
+import automation.runner.ListeningClass;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -9,6 +10,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
+
 
 
 public class LoginPage extends BasePage {
@@ -30,9 +33,9 @@ public class LoginPage extends BasePage {
 
     }
 
-    public ProductsPage login() {
-        userName.sendKeys(USER_NAME);
-        password.sendKeys(PASSWORD);
+    public ProductsPage login(String login, String pass) {
+        userName.sendKeys(login);
+        password.sendKeys(pass);
         loginButton.click();
 
         return new ProductsPage(getDriver());

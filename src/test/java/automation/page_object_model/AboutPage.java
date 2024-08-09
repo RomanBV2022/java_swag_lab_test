@@ -5,8 +5,8 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AboutPage extends BasePage {
     public AboutPage(WebDriver driver) {
@@ -26,7 +26,10 @@ public class AboutPage extends BasePage {
         return headerMenuList.stream()
                 .map(WebElement::getText)
                 .map(permalink -> permalink.split(",")[0].trim())
-                .toList();
+                .collect(Collectors.toList());
+
+
+
 
     }
 
