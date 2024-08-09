@@ -1,6 +1,7 @@
 package automation.tests;
 
 import automation.page_object_model.LoginPage;
+import automation.properties.ConfigProvider;
 import automation.runner.BaseTest;
 import io.qameta.allure.*;
 import org.testng.Assert;
@@ -11,7 +12,7 @@ public class CheckPageContentTest extends BaseTest {
     @Test
     public void loginCheckItemsTest() {
         int items = new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .howMuchElements();
 
         Assert.assertEquals(items, 6);
@@ -20,7 +21,7 @@ public class CheckPageContentTest extends BaseTest {
     @Test
     public void checkTitleTest() {
         String title = new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .getTitle();
 
         Assert.assertEquals(title, TITLE_OF_PAGE);
@@ -33,7 +34,7 @@ public class CheckPageContentTest extends BaseTest {
     @Link(name= "WebSite", url = "https://www.saucedemo.com/")
     public void checkHeaderMenuTest() {
         int itemMenuList = new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .clickMenu()
                 .getMenuItem();
 

@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ProductsPage extends BasePage {
     private static final String URL;
@@ -121,9 +122,10 @@ public class ProductsPage extends BasePage {
                 .stream()
                 .map(WebElement::getText)
                 .map(permalink -> permalink.split(",")[0].trim())
-                .toList();
+                .collect(Collectors.toList());
     }
 
+    @Step("Expected result: User is login")
     public String loginConfirm() {
         waitElementVisible(logOutButton, 5);
 

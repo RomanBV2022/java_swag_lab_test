@@ -2,6 +2,7 @@ package automation.tests;
 
 import automation.page_object_model.LoginPage;
 import automation.page_object_model.ProductsPage;
+import automation.properties.ConfigProvider;
 import automation.runner.BaseTest;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
@@ -20,7 +21,7 @@ public class AboutPageTest  extends BaseTest {
     @Description("Checking  title of page")
     public void testPageTitle() {
         String titleOfPage = new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .clickMenu()
                 .goToAboutPage()
                 .showTitleOfPage();
@@ -37,11 +38,12 @@ public class AboutPageTest  extends BaseTest {
     @Description("Checking menu content")
     public void testHeaderMenuContent() {
       List<String> itemList = new LoginPage(getDriver())
-              .login()
+              .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
               .clickMenu()
               .goToAboutPage()
               .showMenuList();
-        System.out.println(itemList);
+
+
     }
 
 }

@@ -2,6 +2,7 @@ package automation.tests;
 
 import automation.constans.Constant;
 import automation.page_object_model.LoginPage;
+import automation.properties.ConfigProvider;
 import automation.runner.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -45,7 +46,7 @@ public class CheckProductsTest extends BaseTest {
     @Test
     public void sortProductTest() {
         List<String> dropDownSelectHighToLow = new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .dropDownSelect(Constant.Sorted.LOW_TO_HIGH)
                 .sortPriceProducts();
         System.out.println(dropDownSelectHighToLow);
@@ -66,7 +67,7 @@ public class CheckProductsTest extends BaseTest {
     public void sortProductLowToHighTest() {
 
         String dropDownSelect = new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .dropdownSelectGetValue(Constant.Sorted.LOW_TO_HIGH);
 
         String listResults = "Price (low to high)";
@@ -79,7 +80,7 @@ public class CheckProductsTest extends BaseTest {
     public void sortProductWithDataProviderString(String getValueOfData) {
 
         String dropDownSelect = new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .dropdownSelectGetValue(getValueOfData.toString());
 
         String listResults = "Price (low to high), Price (high to low), Name (A to Z), Name (Z to A)";
@@ -92,7 +93,7 @@ public class CheckProductsTest extends BaseTest {
     public void sortProductWithDataProvider(String getValue, String getResult) {
 
         String dropDownSelect = new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .dropdownSelectGetValue(getValue.toString());
 
 
@@ -103,7 +104,7 @@ public class CheckProductsTest extends BaseTest {
     public void sortProductToPriceWithDataProvider(String getValueOfData, List<String> result) {
 
         List<String> dropDownSelect = new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .dropdownSelectList(getValueOfData.toString())
                 .sortPriceProducts();
 

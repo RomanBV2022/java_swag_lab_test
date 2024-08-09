@@ -2,14 +2,17 @@ package automation.tests;
 
 
 import automation.page_object_model.LoginPage;
+import automation.properties.ConfigProvider;
 import automation.runner.BaseTest;
 import io.qameta.allure.*;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 
 import static io.qameta.allure.SeverityLevel.CRITICAL;
+@Listeners({automation.runner.ListeningClass.class})
 
 @Epic("Login")
 public class LoginTest extends BaseTest {
@@ -30,7 +33,7 @@ public class LoginTest extends BaseTest {
     @Severity(CRITICAL)
     public void loginTest() {
         String items = new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .clickMenu()
                 .loginConfirm();
         Allure.step("Expected result: User is login");
@@ -58,7 +61,7 @@ public class LoginTest extends BaseTest {
     @Severity(CRITICAL)
     public void logOutTest() {
         String logOut= new LoginPage(getDriver())
-                .login()
+                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
                 .clickMenu()
                 .logOut()
                 .logOutString();
@@ -66,10 +69,7 @@ public class LoginTest extends BaseTest {
         Allure.step("Expected result: User is logout ");
         Assert.assertEquals(logOut, "Login", "Error message : Your are not logout");
     }
-    @Test
-    public  void logOutSampleTest() {
 
-    }
 
 
 }
