@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Listeners;
 
+import java.io.IOException;
 
 
 public class LoginPage extends BasePage {
@@ -41,6 +42,11 @@ public class LoginPage extends BasePage {
         return new ProductsPage(getDriver());
     }
 
+    public static void readProperties(String valueOfProperty) throws IOException {
+        System.getProperties().load(ClassLoader.getSystemResourceAsStream("test.properties"));
+        System.getProperty(valueOfProperty);
+    }
+
     public ProductsPage loginWithDataParameters(String name, String pass) {
         userName.sendKeys(name);
         password.sendKeys(pass);
@@ -53,7 +59,7 @@ public class LoginPage extends BasePage {
     public String logOutString() {
         getWait5().until(ExpectedConditions.visibilityOf(loginButton));
 
-        return  loginButton.getAttribute("value");
+        return loginButton.getAttribute("value");
     }
 
 }
