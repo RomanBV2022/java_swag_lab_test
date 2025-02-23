@@ -12,7 +12,7 @@ public interface ConfigProvider {
                 : ConfigFactory.load("test.conf");
     }
 
-    static  final String LOGIN = config.getString("loginUser.login");
-    static final String PASSWORD = config.getString("loginUser.password");
+    static  final String LOGIN = config.getString("login");
+    static final String PASSWORD = config.getString("password");
 
 }
