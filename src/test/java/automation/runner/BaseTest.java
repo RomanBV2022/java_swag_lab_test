@@ -1,4 +1,6 @@
 package automation.runner;
+import automation.utils.ListeningConfig;
+import automation.utils.ProjectUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestResult;
@@ -7,32 +9,31 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 import java.time.Duration;
 
-
+@Listeners(ListeningConfig.class)
 public abstract class BaseTest {
     private WebDriver driver;
-
     private WebDriverWait wait2;
     private WebDriverWait wait5;
     private WebDriverWait wait10;
 
 
     private void startDriver() {
-        ProjectUtils.log("Browser open");
+//        ProjectUtils.log("Browser open");
 
         driver = ProjectUtils.createDriver();
     }
 
     private void clearData() {
-        ProjectUtils.log("Clear data");
+//        ProjectUtils.log("Clear data");
 
     }
 
     private void loginWeb() {
-        ProjectUtils.log("Login");
+//        ProjectUtils.log("Login");
     }
 
     private void getWeb() {
-        ProjectUtils.log("Get web page: https://www.saucedemo.com/");
+//        ProjectUtils.log("Get web page: https://www.saucedemo.com/");
         ProjectUtils.get(driver);
     }
 
@@ -59,19 +60,17 @@ public abstract class BaseTest {
             wait5 = null;
             wait10 = null;
 
-            ProjectUtils.log("Browser closed");
+//            ProjectUtils.log("Browser closed");
         }
     }
 
 
     @BeforeMethod
     protected void beforeMethod(Method method) {
-        ProjectUtils.logf("Run %s.%s", this.getClass().getName(), method.getName());
+//        ProjectUtils.logf("Run %s.%s", this.getClass().getName(), method.getName());
         try {
-            clearData();
             startDriver();
             getWeb();
-            loginWeb();
 
         } catch (Exception e) {
             closeDriver();
@@ -124,7 +123,7 @@ public abstract class BaseTest {
             stopDriver();
         }
 
-        ProjectUtils.logf("Execution time is %o sec\n\n", (testResult.getEndMillis() - testResult.getStartMillis()) / 1000);
+//        ProjectUtils.logf("Execution time is %o sec\n\n", (testResult.getEndMillis() - testResult.getStartMillis()) / 1000);
     }
 
 

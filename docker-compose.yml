@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  tests:
+    build: .
+    image: trello-api-tests
+    container_name: test-container
+    volumes:
+      - ./target/allure-results:/app/target/allure-results
+
+

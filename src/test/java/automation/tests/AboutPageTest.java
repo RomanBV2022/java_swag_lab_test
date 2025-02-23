@@ -1,8 +1,7 @@
 package automation.tests;
 
 import automation.page_object_model.LoginPage;
-import automation.page_object_model.ProductsPage;
-import automation.properties.ConfigProvider;
+import automation.utils.ConfigProvider;
 import automation.runner.BaseTest;
 import io.qameta.allure.Allure;
 import io.qameta.allure.Description;

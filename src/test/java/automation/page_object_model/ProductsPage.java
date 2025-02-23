@@ -29,11 +29,8 @@ public class ProductsPage extends BasePage {
     @FindBy
     WebElement dropDownMenu = getDriver().findElement(By.xpath("//select[@class = 'product_sort_container']"));
 
-
     @FindBy
     WebElement productFirstItem = getDriver().findElement(By.xpath("//div[@class = 'inventory_list']/div[@class='inventory_item'][1]/div[@class = 'inventory_item_description']//div[@class ='inventory_item_name ']"));
-
-
 
     @FindBy
     List<WebElement> allProducts = getDriver().findElements(By.xpath("//div[@class = 'inventory_item']"));

@@ -1,7 +1,7 @@
 package automation.tests;
 
 import automation.page_object_model.LoginPage;
-import automation.properties.ConfigProvider;
+import automation.utils.ConfigProvider;
 import automation.runner.BaseTest;
 import io.qameta.allure.*;
 import org.testng.Assert;
@@ -21,7 +21,7 @@ public class CheckPageContentTest extends BaseTest {
     @Test
     public void checkTitleTest() {
         String title = new LoginPage(getDriver())
-                .login(ConfigProvider.LOGIN, ConfigProvider.PASSWORD)
+                .login("standard_user", "secret_sauce")
                 .getTitle();
 
         Assert.assertEquals(title, TITLE_OF_PAGE);
