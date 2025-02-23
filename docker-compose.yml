@@ -7,5 +7,6 @@ services:
     container_name: test-container
     volumes:
       - ./target/allure-results:/app/target/allure-results
+      - ./src/test/resources/test.conf:/app/src/test/resources/test.conf
 
 
