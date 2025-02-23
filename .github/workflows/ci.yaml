@@ -32,8 +32,8 @@ jobs:
 
       - name: Create config.properties
         run: |
-          echo "key=${{ secrets.login }}" > src/test/resources/config.properties
-          echo "token=${{ secrets.password }}" >> src/test/resources/config.properties
+          echo "login=${{ secrets.login }}" > src/test/resources/test.conf
+          echo "password=${{ secrets.password }}" >> src/test/resources/test.conf
 
       - name: Build with Docker Compose
         run: docker-compose build
