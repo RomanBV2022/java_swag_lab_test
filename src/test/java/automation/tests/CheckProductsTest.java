@@ -2,7 +2,7 @@ package automation.tests;
 
 import automation.constans.Constant;
 import automation.page_object_model.LoginPage;
-import automation.properties.ConfigProvider;
+import automation.utils.ConfigProvider;
 import automation.runner.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;

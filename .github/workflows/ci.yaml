@@ -1,33 +1,62 @@
-name: allure report
+name: Java CI with Maven
 
-on: [ push ]
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
 
 jobs:
   build:
+    name: 'Run tests'
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
+    steps:
+      - name: Git clone
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'adopt'
+          cache: 'maven'
 
-      - name: Run Test
-        if: always()
-        run: mvn package
-        continue-on-error: true
+
+      - name: Set up Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Create config.properties
+        run: |
+          echo "key=${{ secrets.login }}" > src/test/resources/config.properties
+          echo "token=${{ secrets.password }}" >> src/test/resources/config.properties
+
+      - name: Build with Docker Compose
+        run: docker-compose build
+
+      - name: Start Docker Compose services
+        run: docker-compose up
+
+      - name: Attach screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: ${{ github.workspace }}/screenshots
 
       - name: Get Allure history
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         if: always()
         continue-on-error: true
         with:
           ref: gh-pages
           path: gh-pages
 
-      - name: Allure Report action from marketplace
+      - name: Build Allure report
         uses: simple-elf/allure-report-action@master
         if: always()
         id: allure-report
@@ -37,10 +66,20 @@ jobs:
           allure_report: allure-report
           allure_history: allure-history
 
-      - name: Deploy report to Github Pages
-        if: always()
+      - name: Check Allure results
+        run: ls -la target/allure-results
+
+      - name: Publish Allure report to Github Pages
+        if: ${{ success() || failure() }}
         uses: peaceiris/actions-gh-pages@v2
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
+
+      - name: Stop Docker Compose services
+        if: always()
+        run: docker-compose down
+
+
+

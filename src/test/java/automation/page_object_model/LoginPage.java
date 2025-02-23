@@ -2,44 +2,55 @@ package automation.page_object_model;
 
 
 import automation.base.BasePage;
-import automation.runner.ListeningClass;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Listeners;
+import org.openqa.selenium.support.ui.Wait;
 
 import java.io.IOException;
 
 
 public class LoginPage extends BasePage {
 
-    public static final String USER_NAME = "standard_user";
-    public static final String PASSWORD = "secret_sauce";
 
-    @FindBy()
-    WebElement userName = getDriver().findElement(By.id("user-name"));
+    @FindBy(id = "user-name")
+    WebElement userName;
 
-    @FindBy
-    WebElement password = getDriver().findElement(By.id("password"));
+    @FindBy(id = "password")
+    WebElement passwordElement;
 
-    @FindBy
-    WebElement loginButton = getDriver().findElement(By.id("login-button"));
+    @FindBy(id = "login-button")
+    WebElement loginButton;
+
+    @FindBy(xpath = "")
+    WebElement errorMessage;
 
     public LoginPage(WebDriver driver) {
         super(driver);
 
     }
 
-    public ProductsPage login(String login, String pass) {
+    @Step("login with {login} and {password}")
+    public ProductsPage login(String login, String password) {
         userName.sendKeys(login);
-        password.sendKeys(pass);
+        this.passwordElement.sendKeys(password);
+        getWait5();
         loginButton.click();
 
         return new ProductsPage(getDriver());
+    }
+
+    public String loginWithOutOfPassword(String login, String pass) {
+        userName.sendKeys(login);
+        passwordElement.sendKeys(pass);
+        loginButton.click();
+        getWait5().until(ExpectedConditions.visibilityOf(errorMessage));
+
+        return errorMessage.getText();
+
     }
 
     public static void readProperties(String valueOfProperty) throws IOException {
@@ -49,7 +60,7 @@ public class LoginPage extends BasePage {
 
     public ProductsPage loginWithDataParameters(String name, String pass) {
         userName.sendKeys(name);
-        password.sendKeys(pass);
+        passwordElement.sendKeys(pass);
         loginButton.click();
 
         return new ProductsPage(getDriver());
