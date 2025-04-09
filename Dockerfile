@@ -7,10 +7,10 @@ WORKDIR /app
 COPY pom.xml .
 
 # Download dependencies
-RUN mvn dependency:go-offline -B
+#RUN mvn dependency:go-offline -B
 
 # Copy remaining source files
-COPY src ./src
+COPY . .
 
 # Install Chrome dependencies and Chrome itself
 RUN apk add --no-cache \
@@ -25,9 +25,6 @@ RUN apk add --no-cache \
 # Set Chrome path
 ENV CHROME_BIN=/usr/bin/chromium-browser
 
-# Create directories for test outputs
-RUN mkdir -p /app/target/surefire-reports \
-    && mkdir -p /app/logs
 
 # Run tests
 CMD ["mvn", "test", "-DsuiteXmlFile=src/test/resources/testng.xml"]
