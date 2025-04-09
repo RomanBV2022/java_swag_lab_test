@@ -26,14 +26,8 @@ jobs:
           java-version: '17'
           cache: 'maven'  # Кеширование Maven зависимостей
 
-      # Шаг 3: Анализ измененных файлов (опционально)
-      - name: Detect changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v41
-        with:
-          since_last_remote_commit: 'true'
 
-      # Шаг 4: Настройка конфигурации (улучшенная версия)
+
       - name: Setup test configuration
         run: |
           mkdir -p src/test/resources
@@ -45,7 +39,7 @@ jobs:
           LOGIN: ${{ secrets.login }}
           PASSWORD: ${{ secrets.password }}
 
-      # Шаг 5: Запуск тестов с таймаутом
+
       - name: Run tests with Maven
         timeout-minutes: 30  # Защита от зависаний
         run: |
@@ -55,7 +49,6 @@ jobs:
           mkdir -p target/allure-results
           exit $TEST_RESULT
 
-      # Шаг 6: Обработка Allure отчетов (улучшенная версия)
       - name: Prepare Allure history
         if: always()
         uses: actions/checkout@v4
