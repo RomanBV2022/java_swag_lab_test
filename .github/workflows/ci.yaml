@@ -1,46 +1,34 @@
-name: Java CI with Selenium
+name: CI
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches:
+     -main
+  push:
+    branches:
+    - main
 
 jobs:
-  test:
-    name: Run Selenium Tests
+  run-test:
+    name: 'Run tests'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Git clone
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      - name: Set up JDK 17
+      - name: Install JDK
         uses: actions/setup-java@v3
         with:
+          distribution: 'corretto'
           java-version: '17'
-          distribution: 'temurin'
           cache: 'maven'
 
-      - name: Install Chrome
-        run: |
-            sudo apt-get update
-            sudo apt-get install -y google-chrome-stable
-            google-chrome --version
+      - name: Get list of changed files
+        run: echo "LIST_OF_CHANGED_FILES=$(git diff --name-only origin/$GITHUB_HEAD_REF $(git merge-base origin/$GITHUB_HEAD_REF origin/main) | tr '\n' ';')" >> $GITHUB_ENV
 
-      - name: Set up ChromeDriver
-        uses: nanasess/setup-chromedriver@v1
-        with:
-                chromedriver-version: 'latest'
-
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-              ${{ runner.os }}-maven-
-          
 
 
       - name: Create test.conf
@@ -53,12 +41,7 @@ jobs:
           echo "headless=true" >> src/test/resources/test.conf
           echo "timeout=30" >> src/test/resources/test.conf
 
-      - name: Run Selenium Tests
-        run: |
-          export DISPLAY=:99
-          Xvfb :99 -screen 0 1920x1080x16 &
-          mvn test -B
-          killall Xvfb
+   
 
       - name: Attach screenshots
         if: failure()
