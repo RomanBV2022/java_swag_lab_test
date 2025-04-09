@@ -1,10 +1,12 @@
 FROM maven:3.9.6-eclipse-temurin-17-alpine
 
-# Устанавливаем рабочую директорию
+# Set working directory
 WORKDIR /app
 
-# Копируем файлы проекта
+# Copy
 COPY . .
 
-# Выполняем тесты
-CMD ["mvn", "test"]
+
+
+# Run tests
+CMD ["mvn", "test", "-DsuiteXmlFile=src/test/resources/testng.xml"]
