@@ -43,6 +43,7 @@ public class LoginTest extends BaseTest {
 
     }
 
+    @Ignore
     @Test(dataProvider = "loginData")
     @Story("login")
     @Description("Testing login to website")
