@@ -1,12 +1,38 @@
 version: '3'
 
 services:
+  selenium-hub:
+    image: selenium/hub:4.5.0
+    ports:
+      - "4444:4444"
+    container_name: selenium-hub
+
+  chrome:
+    image: selenium/node-chrome:4.5.0
+    shm_size: 2gb
+    depends_on:
+      - selenium-hub
+    environment:
+      - SE_EVENT_BUS_HOST=selenium-hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - SE_NODE_MAX_SESSIONS=4
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
+
   tests:
     build: .
-    image: trello-api-tests
-    container_name: test-container
+    image: swag_lab_test
+    container_name: test-container_swag_lab
+    environment:
+      - SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
+      - BASE_URL=https://www.saucedemo.com
     volumes:
+      - ./target/surefire-reports:/app/target/surefire-reports
       - ./target/allure-results:/app/target/allure-results
+      - ./logs:/app/logs
       - ./src/test/resources/test.conf:/app/src/test/resources/test.conf
+    depends_on:
+      selenium-hub:
+        condition: service_healthy
 
 
