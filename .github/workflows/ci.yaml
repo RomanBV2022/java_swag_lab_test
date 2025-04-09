@@ -35,7 +35,9 @@ jobs:
         run: |
           echo "key=${{ secrets.login }}" > src/test/resources/test.conf
           echo "token=${{ secrets.password }}" >> src/test/resources/test.conf
-        
+
+      - name: Run Maven tests
+        run: mvn clean test
 
 
       - name: Attach screenshots
