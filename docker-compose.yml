@@ -2,21 +2,12 @@ version: '3'
 
 services:
   tests:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: swag_lab_test
-    container_name: test-container_swag_lab
+    build: .
+    image: trello-api-tests
+    container_name: test-container
     environment:
-      - SELENIUM_REMOTE_URL=http://selenium-hub:4444/wd/hub
-      - BASE_URL=https://www.saucedemo.com
+      key: $key
+      token: $token
     volumes:
-      - ./target/surefire-reports:/app/target/surefire-reports
       - ./target/allure-results:/app/target/allure-results
-      - ./logs:/app/logs
-      - ./src/test/resources/test.conf:/app/src/test/resources/test.conf
-    depends_on:
-      selenium-hub:
-        condition: service_healthy
-
-
+      - ./src/test/resources/config.properties:/app/src/test/resources/test.conf

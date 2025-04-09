@@ -38,32 +38,43 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      - name: Install Chrome
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y google-chrome-stable
+            google-chrome --version
+
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v1
+        with:
+                chromedriver-version: 'latest'
+
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2-
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+              ${{ runner.os }}-maven-
+          
 
-      - name: Set up Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-          docker-compose --version
 
       - name: Create test.conf
         run: |
-          echo "key=${{ secrets.login }}" > src/test/resources/config.properties
-          echo "token=${{ secrets.password }}" >> src/test/resources/config.properties
+          echo "key=${{ secrets.login }}" > src/test/resources/test.conf
+          echo "token=${{ secrets.password }}" >> src/test/resources/test.conf
           echo "remote.url=http://selenium-hub:4444/wd/hub" >> src/test/resources/test.conf
           echo "headless=true" >> src/test/resources/test.conf
+          echo "browser=chrome" >> src/test/resources/test.conf
+          echo "headless=true" >> src/test/resources/test.conf
+          echo "timeout=30" >> src/test/resources/test.conf
 
-
-      - name: Build Docker image
-        run: docker-compose build
-
-      - name: Run tests in Docker
-        run: docker-compose up --abort-on-container-exit
+      - name: Run Selenium Tests
+        run: |
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1920x1080x16 &
+          mvn test -B
+          killall Xvfb
 
       - name: Attach screenshots
         if: failure()
