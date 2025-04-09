@@ -79,6 +79,3 @@ jobs:
               PUBLISH_BRANCH: gh-pages
               PUBLISH_DIR: allure-history
 
-      - name: Stop Docker Compose services
-        if: always()
-        run: docker-compose down
