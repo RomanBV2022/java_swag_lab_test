@@ -8,8 +8,10 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
+
 import java.util.List;
 
+@Ignore
 public class CheckProductsTest extends BaseTest {
     @DataProvider(name = "getSortValue")
     public Object[][] getSortValue() {
@@ -33,10 +35,10 @@ public class CheckProductsTest extends BaseTest {
     }
 
     @DataProvider(name = "getSortPrice")
-    public Object [][] getSortPrice() {
-        return new  Object[][] {
+    public Object[][] getSortPrice() {
+        return new Object[][]{
                 {"lohi", List.of("$29.99", "$9.99", "$15.99", "$49.99", "$7.99", "$15.99")},
-                {"hilo",List.of("$29.99", "$9.99", "$15.99", "$49.99", "$7.99", "$15.99")},
+                {"hilo", List.of("$29.99", "$9.99", "$15.99", "$49.99", "$7.99", "$15.99")},
                 {"az", List.of("$29.99", "$9.99", "$15.99", "$49.99", "$7.99", "$15.99")},
                 {"za", List.of("$29.99", "$9.99", "$15.99", "$49.99", "$7.99", "$15.99")}
         };

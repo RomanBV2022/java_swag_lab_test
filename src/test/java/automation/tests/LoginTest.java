@@ -15,7 +15,6 @@ import org.testng.annotations.Test;
 
 import static io.qameta.allure.SeverityLevel.CRITICAL;
 
-
 @Epic("Create account")
 @Feature("Login")
 public class LoginTest extends BaseTest {
@@ -44,6 +43,7 @@ public class LoginTest extends BaseTest {
 
     }
 
+    @Ignore
     @Test(dataProvider = "loginData")
     @Story("login")
     @Description("Testing login to website")

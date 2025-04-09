@@ -5,8 +5,9 @@ services:
     build: .
     image: trello-api-tests
     container_name: test-container
+    environment:
+      key: $key
+      token: $token
     volumes:
       - ./target/allure-results:/app/target/allure-results
-      - ./src/test/resources/test.conf:/app/src/test/resources/test.conf
-
-
+      - ./src/test/resources/config.properties:/app/src/test/resources/test.conf

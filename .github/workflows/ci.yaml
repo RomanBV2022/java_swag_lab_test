@@ -1,85 +1,81 @@
-name: Java CI with Maven
+name: CI
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  build:
+  run-test:
     name: 'Run tests'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Git clone
+      # Шаг 1: Получение кода
+      - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Setup JDK 17
-        uses: actions/setup-java@v4
         with:
-          java-version: '11'
-          distribution: 'adopt'
-          cache: 'maven'
+          fetch-depth: 0  # Полная история коммитов для корректного diff
 
-
-      - name: Set up Docker Compose
-        run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/v2.23.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-
-      - name: Create config.properties
-        run: |
-          echo "login=${{ secrets.login }}" > src/test/resources/test.conf
-          echo "password=${{ secrets.password }}" >> src/test/resources/test.conf
-
-      - name: Build with Docker Compose
-        run: docker-compose build
-
-      - name: Start Docker Compose services
-        run: docker-compose up
-
-      - name: Attach screenshots
-        if: failure()
-        uses: actions/upload-artifact@v4
+      # Шаг 2: Установка JDK
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
-          name: screenshots
-          path: ${{ github.workspace }}/screenshots
+          distribution: 'temurin'  # Рекомендуемая OpenJDK сборка
+          java-version: '17'
+          cache: 'maven'  # Кеширование Maven зависимостей
 
-      - name: Get Allure history
-        uses: actions/checkout@v4
+
+
+      - name: Setup test configuration
+        run: |
+          mkdir -p src/test/resources
+          cat <<EOF > src/test/resources/test.conf
+          key=${LOGIN}
+          token=${PASSWORD}
+          EOF
+        env:
+          LOGIN: ${{ secrets.login }}
+          PASSWORD: ${{ secrets.password }}
+
+
+      - name: Run tests with Maven
+        timeout-minutes: 30  # Защита от зависаний
+        run: |
+          mvn clean test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          TEST_RESULT=$?
+          # Сохраняем результаты Allure даже при падении тестов
+          mkdir -p target/allure-results
+          exit $TEST_RESULT
+
+      - name: Prepare Allure history
         if: always()
-        continue-on-error: true
+        uses: actions/checkout@v4
         with:
           ref: gh-pages
           path: gh-pages
+          persist-credentials: false
 
-      - name: Build Allure report
-        uses: simple-elf/allure-report-action@master
+      - name: Generate Allure report
         if: always()
-        id: allure-report
+        uses: simple-elf/allure-report-action@v2
         with:
           allure_results: target/allure-results
           gh_pages: gh-pages
-          allure_report: allure-report
-          allure_history: allure-history
+          allure_report_dir: allure-report
+          keep_history: true
+          ignore_failed: true
 
-      - name: Check Allure results
-        run: ls -la target/allure-results
-
-      - name: Publish Allure report to Github Pages
-        if: ${{ success() || failure() }}
-        uses: peaceiris/actions-gh-pages@v2
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
-
-      - name: Stop Docker Compose services
+      - name: Upload Allure report
         if: always()
-        run: docker-compose down
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: gh-pages/allure-report
+          destination_dir: allure-report
+          keep_files: true
+
 
 
 

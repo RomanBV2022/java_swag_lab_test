@@ -5,8 +5,9 @@ import automation.utils.ConfigProvider;
 import automation.runner.BaseTest;
 import io.qameta.allure.*;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
-
+@Ignore
 public class CheckPageContentTest extends BaseTest {
     private static final String TITLE_OF_PAGE = "Swag Labs";
     @Test

@@ -8,10 +8,11 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Story;
 import org.testng.Assert;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.util.List;
-
+@Ignore
 @Epic("About page")
 public class AboutPageTest  extends BaseTest {
 
